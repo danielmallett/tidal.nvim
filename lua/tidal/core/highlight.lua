@@ -25,34 +25,25 @@ api.nvim_set_hl(0, higroup, hl_opts.highlight)
 --   })
 -- end
 
-
 function M.apply_highlight(start, finish)
-  local event = vim.v.event
+  local event = vim.v.event or {}
   local bufnr = api.nvim_get_current_buf()
 
-  -- Debug: Check what vim.hl contains
+  -- Extended debugging
+  print("Neovim version:", vim.version())
+  print("vim table keys:", table.concat(vim.tbl_keys(vim), ", "))
+  print("vim.highlight exists:", vim.highlight ~= nil)
   print("vim.hl exists:", vim.hl ~= nil)
-  if vim.hl then
-    print("vim.hl.range exists:", vim.hl.range ~= nil)
-    print("vim.hl.priorities exists:", vim.hl.priorities ~= nil)
-  end
-
-  -- Check if vim.hl and vim.hl.range exist
-  if not vim.hl then
-    error("vim.hl is nil - this shouldn't happen in Neovim 0.10.0")
-  end
   
-  if not vim.hl.range then
-    error("vim.hl.range is nil - this shouldn't happen in Neovim 0.10.0")
+  -- Check if we're in some weird context
+  print("_G.vim exists:", _G.vim ~= nil)
+  print("_G.vim == vim:", _G.vim == vim)
+
+  -- Try to access vim.hl directly from _G
+  if _G.vim and _G.vim.hl then
+    print("_G.vim.hl exists:", _G.vim.hl ~= nil)
   end
 
-  vim.hl.range(bufnr, ns, higroup, start, finish, {
-    regtype = event.regtype or "v",
-    inclusive = event.inclusive,
-    priority = vim.hl.priorities.user,
-    timeout = hl_opts.timeout,
-  })
-end
 
 --- Clear tidal.nvim highlights in all buffers
 function M.clear_all()
