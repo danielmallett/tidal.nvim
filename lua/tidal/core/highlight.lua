@@ -43,7 +43,7 @@ function M.apply_highlight(start, finish)
   if _G.vim and _G.vim.hl then
     print("_G.vim.hl exists:", _G.vim.hl ~= nil)
   end
-
+end
 
 --- Clear tidal.nvim highlights in all buffers
 function M.clear_all()
