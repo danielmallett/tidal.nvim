@@ -10,12 +10,41 @@ local higroup = "TidalSent"
 
 api.nvim_set_hl(0, higroup, hl_opts.highlight)
 
---- Apply a transient highlight to a range in the current buffer
----@param start { [1]: integer, [2]: integer } Start position {line, col}
----@param finish { [1]: integer, [2]: integer } Finish position {line, col}
+-- --- Apply a transient highlight to a range in the current buffer
+-- ---@param start { [1]: integer, [2]: integer } Start position {line, col}
+-- ---@param finish { [1]: integer, [2]: integer } Finish position {line, col}
+-- function M.apply_highlight(start, finish)
+--   local event = vim.v.event
+--   local bufnr = api.nvim_get_current_buf()
+
+--   vim.hl.range(bufnr, ns, higroup, start, finish, {
+--     regtype = event.regtype or "v",
+--     inclusive = event.inclusive,
+--     priority = vim.hl.priorities.user,
+--     timeout = hl_opts.timeout,
+--   })
+-- end
+
+
 function M.apply_highlight(start, finish)
   local event = vim.v.event
   local bufnr = api.nvim_get_current_buf()
+
+  -- Debug: Check what vim.hl contains
+  print("vim.hl exists:", vim.hl ~= nil)
+  if vim.hl then
+    print("vim.hl.range exists:", vim.hl.range ~= nil)
+    print("vim.hl.priorities exists:", vim.hl.priorities ~= nil)
+  end
+
+  -- Check if vim.hl and vim.hl.range exist
+  if not vim.hl then
+    error("vim.hl is nil - this shouldn't happen in Neovim 0.10.0")
+  end
+  
+  if not vim.hl.range then
+    error("vim.hl.range is nil - this shouldn't happen in Neovim 0.10.0")
+  end
 
   vim.hl.range(bufnr, ns, higroup, start, finish, {
     regtype = event.regtype or "v",
